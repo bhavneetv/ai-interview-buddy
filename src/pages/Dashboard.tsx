@@ -231,7 +231,7 @@ function usePerformanceData(user) {
 
       const sessionActivity = completedSessions.slice(0, 5).map((session) => ({
         id: `interview-${session.id}`,
-        type: "interview",
+        type: "interview" as const,
         title: "AI Interview Session",
         score: safeScore(session.overall_score),
         date: shortDate(session.created_at),
@@ -241,7 +241,7 @@ function usePerformanceData(user) {
 
       const resumeActivity = resumes.slice(0, 5).map((resume) => ({
         id: `resume-${resume.id}`,
-        type: "resume",
+        type: "resume" as const,
         title: resume.file_name || "Resume Analysis",
         score: safeScore(resume.score),
         date: shortDate(resume.created_at),
@@ -323,7 +323,7 @@ function Skeleton({ className = "" }) {
 
 // ─── Custom Tooltip ──────────────────────────────────────────────────────────
 
-function CustomTooltip({ active, payload, label }) {
+function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-[#111120] border border-white/10 rounded-xl p-3 shadow-2xl text-xs">

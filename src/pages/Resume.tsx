@@ -98,7 +98,7 @@ async function extractPdfText(file) {
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    text += content.items.map((item) => item.str).join(" ") + "\n";
+    text += content.items.map((item: any) => item.str ?? "").join(" ") + "\n";
   }
   return text.trim();
 }
@@ -257,7 +257,7 @@ function useResumeHistory(user) {
 
 // ─── Animated Circular Progress ───────────────────────────────────────────────
 
-function CircleScore({ score, size = 120, strokeWidth = 8, label, started }) {
+function CircleScore({ score, size = 120, strokeWidth = 8, label, started }: any) {
   const r = (size - strokeWidth * 2) / 2;
   const circ = 2 * Math.PI * r;
   const count = useCountUp(score, 1400, started);
@@ -567,7 +567,7 @@ function AnalysisSkeleton() {
 
 // ─── Resume History Panel ─────────────────────────────────────────────────────
 
-function ResumeHistoryPanel({ user, onLoadAnalysis }) {
+function ResumeHistoryPanel({ user, onLoadAnalysis }: any) {
   const { history, loading } = useResumeHistory(user);
 
   if (loading) {
@@ -634,7 +634,7 @@ function ResumeHistoryPanel({ user, onLoadAnalysis }) {
 
 // ─── Upload Section ───────────────────────────────────────────────────────────
 
-function ResumeUpload({ uploadState, onFileChange }) {
+function ResumeUpload({ uploadState, onFileChange }: any) {
   const { file, loading, dragOver, setDragOver, error, progress, handleFile, handleDrop, upload } = uploadState;
   const inputRef = useRef(null);
 
