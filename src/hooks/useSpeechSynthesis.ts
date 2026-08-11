@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
+// Remembers (per page load) whether the server TTS endpoint is usable.
+let serverTtsAvailable: boolean | null = null;
+
 export function useSpeechSynthesis() {
   const preferredVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
   const playbackTokenRef = useRef(0);
+  const unlockedAudioRef = useRef<HTMLAudioElement | null>(null);
+
 
   const resolvePreferredVoice = useCallback(() => {
     const voices = window.speechSynthesis.getVoices();
