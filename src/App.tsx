@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Resume from "./pages/Resume";
 import Interview from "./pages/Interview";
 import History from "./pages/History";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
