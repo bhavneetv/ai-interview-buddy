@@ -14,6 +14,7 @@ interface Props {
   enabled: boolean;
   mirror?: boolean;
   compact?: boolean;
+  alerts?: boolean;
 }
 
 function Meter({ label, value, color }: { label: string; value: number; color: string }) {
@@ -35,7 +36,7 @@ function Meter({ label, value, color }: { label: string; value: number; color: s
   );
 }
 
-export default function FaceScanPanel({ enabled, mirror = true, compact = false }: Props) {
+export default function FaceScanPanel({ enabled, mirror = true, compact = false, alerts = true }: Props) {
   const { videoRef, metrics, active, error } = useFaceMonitor(enabled);
 
   if (!enabled) return null;
@@ -81,6 +82,12 @@ export default function FaceScanPanel({ enabled, mirror = true, compact = false 
         <Meter label="Confidence" value={metrics.confidence} color={tokens.emerald} />
         <Meter label="Nervousness" value={metrics.nervousness} color={metrics.nervousness > 55 ? tokens.red : tokens.amber} />
         <Meter label="Eye contact" value={metrics.eyeContact} color={tokens.violet} />
+        {alerts && metrics.facePresent && metrics.nervousness > 60 && (
+          <p className="text-[10px]" style={{ color: tokens.red }}>Take a breath — high restlessness detected.</p>
+        )}
+        {alerts && active && !metrics.facePresent && (
+          <p className="text-[10px]" style={{ color: tokens.amber }}>Stay in frame for attendance tracking.</p>
+        )}
         <div className="flex items-center justify-between text-[10px] text-white/30 pt-1">
           <span className="flex items-center gap-1"><Activity className="w-3 h-3" /> Motion {metrics.movement}</span>
           <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Away {metrics.awayEvents}x</span>

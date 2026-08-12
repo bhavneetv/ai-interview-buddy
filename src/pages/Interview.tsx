@@ -944,7 +944,7 @@ export default function Interview() {
                 <GlassCard className="p-6 flex flex-col items-center justify-center h-fit">
                   <AIAvatar isSpeaking={isAiSpeaking} phase={phase} />
                 </GlassCard>
-                <FaceScanPanel enabled={settings.cameraEnabled} mirror={settings.mirrorCamera} compact />
+                <FaceScanPanel enabled={settings.cameraEnabled} mirror={settings.mirrorCamera} alerts={settings.nervousnessAlerts} compact />
               </div>
 
               {/* Center: Question + Transcript */}
@@ -978,7 +978,7 @@ export default function Interview() {
                 </div>
 
                 <div className="lg:hidden">
-                  <FaceScanPanel enabled={settings.cameraEnabled} mirror={settings.mirrorCamera} compact />
+                  <FaceScanPanel enabled={settings.cameraEnabled} mirror={settings.mirrorCamera} alerts={settings.nervousnessAlerts} compact />
                 </div>
 
                 {/* Question card */}
@@ -1114,7 +1114,7 @@ export default function Interview() {
                 <GlassCard className="p-6 flex flex-col items-center justify-center h-fit">
                   <AIAvatar isSpeaking={isAiSpeaking} phase={phase} />
                 </GlassCard>
-                <FaceScanPanel enabled={settings.cameraEnabled} mirror={settings.mirrorCamera} compact />
+                <FaceScanPanel enabled={settings.cameraEnabled} mirror={settings.mirrorCamera} alerts={settings.nervousnessAlerts} compact />
               </div>
 
               {/* Center */}
