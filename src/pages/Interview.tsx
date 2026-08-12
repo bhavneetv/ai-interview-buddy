@@ -12,6 +12,8 @@ import MicButton from '@/components/MicButton';
 import CountdownTimer from '@/components/CountdownTimer';
 import SentimentBadge from '@/components/SentimentBadge';
 import ScoreCircle from '@/components/ScoreCircle';
+import FaceScanPanel from '@/components/FaceScanPanel';
+import { useSettings, loadSettings } from '@/lib/settings';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -372,7 +374,7 @@ function RightPanel({ phase, currentResult, questions, currentQ, timerActive, on
       {/* Timer */}
       <div className="flex flex-col items-center gap-3">
         <p className="text-xs text-white/40 uppercase tracking-widest">Time Remaining</p>
-        <AnimatedTimer seconds={60} isActive={timerActive && !isAiSpeaking} onComplete={onTimerComplete} />
+        <AnimatedTimer seconds={loadSettings().answerSeconds} isActive={timerActive && !isAiSpeaking} onComplete={onTimerComplete} />
       </div>
 
       {/* Question progress */}
@@ -489,6 +491,7 @@ export default function Interview() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [summary, setSummary] = useState<any>(null);
   const [isAiSpeaking, setIsAiSpeaking] = useState(false);
+  const { settings } = useSettings();
 
   const analysisId = location.state?.analysisId;
   const resumeText = location.state?.resumeText;
@@ -936,11 +939,12 @@ export default function Interview() {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="grid lg:grid-cols-[200px_1fr_180px] gap-5 items-start"
             >
-              {/* Left: AI Avatar */}
-              <div className="hidden lg:flex justify-center">
+              {/* Left: AI Avatar + Face scan */}
+              <div className="hidden lg:flex flex-col gap-4">
                 <GlassCard className="p-6 flex flex-col items-center justify-center h-fit">
                   <AIAvatar isSpeaking={isAiSpeaking} phase={phase} />
                 </GlassCard>
+                <FaceScanPanel enabled={settings.cameraEnabled} mirror={settings.mirrorCamera} compact />
               </div>
 
               {/* Center: Question + Transcript */}
@@ -968,9 +972,13 @@ export default function Interview() {
                         </AnimatePresence>
                       </div>
                       {/* Mobile timer */}
-                      <AnimatedTimer seconds={60} isActive={timerActive && !isAiSpeaking} onComplete={handleTimerComplete} />
+                      <AnimatedTimer seconds={loadSettings().answerSeconds} isActive={timerActive && !isAiSpeaking} onComplete={handleTimerComplete} />
                     </div>
                   </GlassCard>
+                </div>
+
+                <div className="lg:hidden">
+                  <FaceScanPanel enabled={settings.cameraEnabled} mirror={settings.mirrorCamera} compact />
                 </div>
 
                 {/* Question card */}
@@ -1101,11 +1109,12 @@ export default function Interview() {
               transition={{ duration: 0.4 }}
               className="grid lg:grid-cols-[200px_1fr_180px] gap-5 items-start"
             >
-              {/* Left: AI Avatar */}
-              <div className="hidden lg:flex justify-center">
+              {/* Left: AI Avatar + Face scan */}
+              <div className="hidden lg:flex flex-col gap-4">
                 <GlassCard className="p-6 flex flex-col items-center justify-center h-fit">
                   <AIAvatar isSpeaking={isAiSpeaking} phase={phase} />
                 </GlassCard>
+                <FaceScanPanel enabled={settings.cameraEnabled} mirror={settings.mirrorCamera} compact />
               </div>
 
               {/* Center */}
@@ -1197,7 +1206,7 @@ export default function Interview() {
         <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30 p-4"
           style={{ borderTop: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(20px)', background: 'rgba(5,5,15,0.9)' }}>
           <div className="flex items-center justify-between gap-4 max-w-lg mx-auto">
-            <AnimatedTimer seconds={60} isActive={timerActive && !isAiSpeaking} onComplete={handleTimerComplete} />
+            <AnimatedTimer seconds={loadSettings().answerSeconds} isActive={timerActive && !isAiSpeaking} onComplete={handleTimerComplete} />
             <motion.button
               aria-label={isListening ? "Stop recording" : "Start recording"}
               disabled={!isSupported || isSubmitting || isAiSpeaking}
