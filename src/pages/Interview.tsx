@@ -681,7 +681,9 @@ export default function Interview() {
       speakWithState(data.final_feedback || 'Great job completing the interview!');
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      setPhase('result');
     }
+
   }, [results, questions, sessionId, speakWithState]);
 
   const nextQuestion = useCallback(() => {
