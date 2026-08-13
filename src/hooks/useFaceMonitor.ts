@@ -83,20 +83,81 @@ export function useFaceMonitor(enabled: boolean) {
     let present = ratio > 0.025;
     let cx = count ? sx / count / canvas.width : 0.5;
     let cy = count ? sy / count / canvas.height : 0.5;
+    let box: FaceBox | null = null;
+    let engine: FaceMetrics['engine'] = 'heuristic';
 
-    // Prefer the native detector when the browser supports it
-    if (detectorRef.current) {
+    // 1) OpenCV.js Haar cascade — gives an accurate square around the face.
+    const cv = getCv();
+    if (cv && cascadeRef.current) {
+      const work = cvCanvasRef.current ?? (cvCanvasRef.current = document.createElement('canvas'));
+      work.width = 240; work.height = 180;
+      const wctx = work.getContext('2d', { willReadFrequently: true });
+      if (wctx) {
+        wctx.drawImage(video, 0, 0, work.width, work.height);
+        let src: any, gray: any, faces: any;
+        try {
+          src = cv.imread(work);
+          gray = new cv.Mat();
+          cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+          cv.equalizeHist(gray, gray);
+          faces = new cv.RectVector();
+          cascadeRef.current.detectMultiScale(gray, faces, 1.15, 4, 0, new cv.Size(40, 40));
+          engine = 'opencv';
+          if (faces.size() > 0) {
+            let best = faces.get(0);
+            for (let i = 1; i < faces.size(); i++) {
+              const f = faces.get(i);
+              if (f.width * f.height > best.width * best.height) best = f;
+            }
+            present = true;
+            box = { x: best.x / work.width, y: best.y / work.height, w: best.width / work.width, h: best.height / work.height };
+            cx = box.x + box.w / 2;
+            cy = box.y + box.h / 2;
+          } else {
+            present = false;
+          }
+        } catch { engine = 'heuristic'; }
+        finally {
+          src?.delete?.(); gray?.delete?.(); faces?.delete?.();
+        }
+      }
+    } else if (detectorRef.current) {
+      // 2) Native FaceDetector API
       try {
-        const faces = await detectorRef.current.detect(video);
-        if (faces?.length) {
-          const box = faces[0].boundingBox;
+        const detected = await detectorRef.current.detect(video);
+        engine = 'native';
+        if (detected?.length) {
+          const b = detected[0].boundingBox;
+          const vw = video.videoWidth || 1, vh = video.videoHeight || 1;
           present = true;
-          cx = (box.x + box.width / 2) / (video.videoWidth || 1);
-          cy = (box.y + box.height / 2) / (video.videoHeight || 1);
+          box = { x: b.x / vw, y: b.y / vh, w: b.width / vw, h: b.height / vh };
+          cx = box.x + box.w / 2;
+          cy = box.y + box.h / 2;
         } else {
           present = false;
         }
       } catch { /* fall back to heuristic */ }
+    }
+
+    // 3) Heuristic box from the skin-tone centroid
+    if (present && !box) {
+      const size = clamp(Math.sqrt(ratio) * 1.9, 0.18, 0.8);
+      box = { x: clamp(cx - size / 2, 0, 1), y: clamp(cy - size / 2, 0, 1), w: size, h: size };
+    }
+
+    // Smooth the square so it glides instead of jittering
+    if (box) {
+      const prev = smoothBox.current;
+      smoothBox.current = prev
+        ? {
+            x: prev.x + (box.x - prev.x) * 0.35,
+            y: prev.y + (box.y - prev.y) * 0.35,
+            w: prev.w + (box.w - prev.w) * 0.35,
+            h: prev.h + (box.h - prev.h) * 0.35,
+          }
+        : box;
+    } else {
+      smoothBox.current = null;
     }
 
     // Motion between samples (proxy for fidgeting / restlessness)
@@ -134,6 +195,8 @@ export function useFaceMonitor(enabled: boolean) {
       movement: Math.round(motionEma.current),
       awayEvents: s.away,
       samples: s.total,
+      box: smoothBox.current,
+      engine,
     });
   }, []);
 
@@ -153,6 +216,8 @@ export function useFaceMonitor(enabled: boolean) {
       if (FD && !detectorRef.current) {
         try { detectorRef.current = new FD({ fastMode: true, maxDetectedFaces: 1 }); } catch { /* unsupported */ }
       }
+      // Load OpenCV in the background; detection upgrades itself once ready.
+      void getFaceClassifier().then(c => { if (c) cascadeRef.current = c; });
       setActive(true);
 
       const loop = async () => {
@@ -165,6 +230,7 @@ export function useFaceMonitor(enabled: boolean) {
       setActive(false);
     }
   }, [sample]);
+
 
   useEffect(() => {
     if (enabled) void start();
