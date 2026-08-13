@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { getFaceClassifier, getCv } from '@/lib/opencv';
+
+export interface FaceBox { x: number; y: number; w: number; h: number } // normalized 0-1
 
 export interface FaceMetrics {
   facePresent: boolean;
@@ -9,30 +12,35 @@ export interface FaceMetrics {
   movement: number;            // 0-100 raw motion
   awayEvents: number;          // how many times the candidate left the frame
   samples: number;
+  box: FaceBox | null;         // face bounding box for the on-screen focus square
+  engine: 'opencv' | 'native' | 'heuristic';
 }
 
 const EMPTY: FaceMetrics = {
   facePresent: false, attendancePercent: 0, nervousness: 0, confidence: 0,
-  eyeContact: 0, movement: 0, awayEvents: 0, samples: 0,
+  eyeContact: 0, movement: 0, awayEvents: 0, samples: 0, box: null, engine: 'heuristic',
 };
 
 const clamp = (n: number, min = 0, max = 100) => Math.max(min, Math.min(max, n));
 
 /**
- * Lightweight in-browser face monitoring.
- * Uses the native FaceDetector API when available, otherwise falls back to a
- * skin-tone + motion heuristic computed on a downscaled canvas.
+ * In-browser face monitoring.
+ * Primary detector is OpenCV.js (Haar cascade) which gives a real bounding box,
+ * with the native FaceDetector API and a skin-tone heuristic as fallbacks.
  */
 export function useFaceMonitor(enabled: boolean) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const cvCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const detectorRef = useRef<any>(null);
+  const cascadeRef = useRef<any>(null);
   const rafRef = useRef<number | null>(null);
 
   const statsRef = useRef({ present: 0, total: 0, away: 0, wasPresent: true });
   const lastCentroid = useRef<{ x: number; y: number } | null>(null);
   const motionEma = useRef(0);
+  const smoothBox = useRef<FaceBox | null>(null);
 
   const [metrics, setMetrics] = useState<FaceMetrics>(EMPTY);
   const [active, setActive] = useState(false);
@@ -43,8 +51,10 @@ export function useFaceMonitor(enabled: boolean) {
     streamRef.current?.getTracks().forEach(t => t.stop());
     streamRef.current = null;
     if (videoRef.current) videoRef.current.srcObject = null;
+    smoothBox.current = null;
     setActive(false);
   }, []);
+
 
   const sample = useCallback(async () => {
     const video = videoRef.current;
