@@ -496,14 +496,27 @@ export default function Interview() {
   const analysisId = location.state?.analysisId;
   const resumeText = location.state?.resumeText;
 
-  // Wrap speak to track AI speaking state
+  // Wrap speak to track AI speaking state.
+  // A watchdog guarantees the flow continues even if the voice engine never
+  // fires its "end" event (missing voices, blocked autoplay, server TTS failure).
   const speakWithState = useCallback((text: string, onEnd?: () => void) => {
     setIsAiSpeaking(true);
-    speak(text, () => {
+    let done = false;
+    const words = text.trim().split(/\s+/).filter(Boolean).length;
+    const watchdogMs = Math.min(45000, Math.max(4000, words * 420 + 3000));
+
+    const finish = () => {
+      if (done) return;
+      done = true;
+      window.clearTimeout(timer);
       setIsAiSpeaking(false);
       onEnd?.();
-    });
+    };
+
+    const timer = window.setTimeout(finish, watchdogMs);
+    speak(text, finish);
   }, [speak]);
+
 
   useEffect(() => {
     if (!user || !analysisId || !resumeText) return;
