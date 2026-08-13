@@ -369,7 +369,7 @@ function PerformanceChart({ data, loading }) {
             <YAxis tick={{ fill: "#ffffff40", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 100]} />
             <Tooltip content={<CustomTooltip />} />
             <Line type="monotone" dataKey="resume" stroke="#8b5cf6" strokeWidth={2.5} dot={{ fill: "#8b5cf6", r: 4 }} name="Resume" />
-            <Line type="monotone" dataKey="interview" stroke="#06b6d4" strokeWidth={2.5} dot={{ fill: "#06b6d4", r: 4 }} name="Interview" />
+            <Line type="monotone" dataKey="interview" stroke="#93a8cc" strokeWidth={2.5} dot={{ fill: "#93a8cc", r: 4 }} name="Interview" />
           </LineChart>
         </ResponsiveContainer>
       </motion.div>
@@ -389,7 +389,7 @@ function PerformanceChart({ data, loading }) {
             <defs>
               <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#8b5cf6" />
-                <stop offset="100%" stopColor="#06b6d4" />
+                <stop offset="100%" stopColor="#93a8cc" />
               </linearGradient>
             </defs>
           </BarChart>

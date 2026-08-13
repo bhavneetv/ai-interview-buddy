@@ -37,15 +37,15 @@ type SubmitOptions = { forceIfEmpty?: boolean };
 // ─── Design Tokens ────────────────────────────────────────────────────────────
 
 const tokens = {
-  bg: '#05050f',
+  bg: '#0a0a0c',
   surface: 'rgba(255,255,255,0.03)',
   border: 'rgba(255,255,255,0.07)',
   borderHover: 'rgba(255,255,255,0.14)',
-  violet: '#7c3aed',
-  cyan: '#06b6d4',
-  emerald: '#10b981',
-  amber: '#f59e0b',
-  red: '#ef4444',
+  violet: '#5b8cff',
+  cyan: '#93a8cc',
+  emerald: '#4fa87d',
+  amber: '#c9a227',
+  red: '#d96a6a',
 };
 
 // ─── Helper Components ────────────────────────────────────────────────────────
@@ -117,7 +117,7 @@ function AnimatedTimer({ seconds, isActive, onComplete }: { seconds: number; isA
   const dash = circ * pct;
 
   const color = timeLeft > 40 ? tokens.emerald : timeLeft > 15 ? tokens.amber : tokens.red;
-  const ringColor = timeLeft > 40 ? 'rgba(16,185,129,0.2)' : timeLeft > 15 ? 'rgba(245,158,11,0.2)' : 'rgba(239,68,68,0.2)';
+  const ringColor = timeLeft > 40 ? 'rgba(79,168,125,0.2)' : timeLeft > 15 ? 'rgba(201,162,39,0.2)' : 'rgba(217,106,106,0.2)';
 
   return (
     <div className="relative flex items-center justify-center" style={{ width: 100, height: 100 }}>
@@ -151,7 +151,7 @@ function AnimatedTimer({ seconds, isActive, onComplete }: { seconds: number; isA
   );
 }
 
-function WaveformBars({ active, color = '#7c3aed' }: { active: boolean; color?: string }) {
+function WaveformBars({ active, color = '#5b8cff' }: { active: boolean; color?: string }) {
   const bars = 12;
   return (
     <div className="flex items-center justify-center gap-[3px]" style={{ height: 32 }}>
@@ -329,7 +329,7 @@ function RightPanel({ phase, currentResult, questions, currentQ, timerActive, on
           <p className="text-xs text-white/40 uppercase tracking-widest mb-3">Answer Score</p>
           <motion.div
             className="relative inline-flex items-center justify-center w-24 h-24 rounded-full mx-auto"
-            style={{ background: 'rgba(124,58,237,0.1)', border: '2px solid rgba(124,58,237,0.3)' }}
+            style={{ background: 'rgba(91,140,255,0.1)', border: '2px solid rgba(91,140,255,0.3)' }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 200 }}
@@ -358,7 +358,7 @@ function RightPanel({ phase, currentResult, questions, currentQ, timerActive, on
         <div className="flex items-center justify-center">
           <span className="px-3 py-1.5 rounded-full text-xs font-semibold capitalize"
             style={{
-              background: currentResult.sentiment === 'positive' ? 'rgba(16,185,129,0.15)' : currentResult.sentiment === 'negative' ? 'rgba(239,68,68,0.15)' : 'rgba(245,158,11,0.15)',
+              background: currentResult.sentiment === 'positive' ? 'rgba(79,168,125,0.15)' : currentResult.sentiment === 'negative' ? 'rgba(217,106,106,0.15)' : 'rgba(201,162,39,0.15)',
               color: currentResult.sentiment === 'positive' ? tokens.emerald : currentResult.sentiment === 'negative' ? tokens.red : tokens.amber,
               border: `1px solid ${currentResult.sentiment === 'positive' ? tokens.emerald : currentResult.sentiment === 'negative' ? tokens.red : tokens.amber}30`,
             }}>
@@ -449,7 +449,7 @@ function RadarChart({ data }: { data: { label: string; value: number; color: str
       })}
       <motion.polygon
         points={polyPoints}
-        fill="rgba(124,58,237,0.15)"
+        fill="rgba(91,140,255,0.15)"
         stroke={tokens.violet}
         strokeWidth={2}
         initial={{ opacity: 0, scale: 0 }}
@@ -717,7 +717,7 @@ export default function Interview() {
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-2"
-              style={{ background: 'rgba(16,185,129,0.1)', color: tokens.emerald, border: `1px solid ${tokens.emerald}30` }}>
+              style={{ background: 'rgba(79,168,125,0.1)', color: tokens.emerald, border: `1px solid ${tokens.emerald}30` }}>
               ✓ Interview Complete
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-white">Your Results</h1>
@@ -986,7 +986,7 @@ export default function Interview() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between flex-wrap gap-3">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold capitalize"
-                        style={{ background: 'rgba(124,58,237,0.15)', color: tokens.violet, border: `1px solid ${tokens.violet}30` }}>
+                        style={{ background: 'rgba(91,140,255,0.15)', color: tokens.violet, border: `1px solid ${tokens.violet}30` }}>
                         {questions[currentQ].type} Question
                       </span>
                       <span className="text-xs text-white/30">Question {currentQ + 1} of {questions.length}</span>
@@ -1130,7 +1130,7 @@ export default function Interview() {
                       <span className="text-xs text-white/40 uppercase tracking-widest">AI Feedback</span>
                       <span className="px-3 py-1 rounded-full text-xs font-semibold capitalize"
                         style={{
-                          background: currentResult.sentiment === 'positive' ? 'rgba(16,185,129,0.15)' : currentResult.sentiment === 'negative' ? 'rgba(239,68,68,0.15)' : 'rgba(245,158,11,0.15)',
+                          background: currentResult.sentiment === 'positive' ? 'rgba(79,168,125,0.15)' : currentResult.sentiment === 'negative' ? 'rgba(217,106,106,0.15)' : 'rgba(201,162,39,0.15)',
                           color: currentResult.sentiment === 'positive' ? tokens.emerald : currentResult.sentiment === 'negative' ? tokens.red : tokens.amber,
                         }}>
                         {currentResult.sentiment === 'positive' ? '😌 Confident' : currentResult.sentiment === 'negative' ? '😟 Nervous' : '😐 Neutral'}
@@ -1161,7 +1161,7 @@ export default function Interview() {
                           initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: i * 0.05 }}
                           className="px-2.5 py-1 rounded-lg text-xs font-medium"
-                          style={{ background: 'rgba(245,158,11,0.15)', color: tokens.amber, border: `1px solid ${tokens.amber}25` }}>
+                          style={{ background: 'rgba(201,162,39,0.15)', color: tokens.amber, border: `1px solid ${tokens.amber}25` }}>
                           "{w}"
                         </motion.span>
                       ))}

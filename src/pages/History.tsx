@@ -180,7 +180,7 @@ function PerformanceChart({ sessions }: { sessions: Session[] }) {
                 <Tooltip content={<CustomTooltip />} />
                 <Legend wrapperStyle={{ fontSize: "11px", color: "#ffffff60" }} />
                 <Line type="monotone" dataKey="Overall" stroke="#8b5cf6" strokeWidth={2.5} dot={{ fill: "#8b5cf6", r: 3 }} />
-                <Line type="monotone" dataKey="Confidence" stroke="#06b6d4" strokeWidth={2} dot={{ fill: "#06b6d4", r: 3 }} strokeDasharray="4 2" />
+                <Line type="monotone" dataKey="Confidence" stroke="#93a8cc" strokeWidth={2} dot={{ fill: "#93a8cc", r: 3 }} strokeDasharray="4 2" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -204,7 +204,7 @@ function PerformanceChart({ sessions }: { sessions: Session[] }) {
             <defs>
               <linearGradient id="barGradHist" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#8b5cf6" />
-                <stop offset="100%" stopColor="#06b6d4" />
+                <stop offset="100%" stopColor="#93a8cc" />
               </linearGradient>
             </defs>
           </BarChart>
@@ -285,7 +285,7 @@ function DetailModal({ session, onClose }: { session: Session; onClose: () => vo
                         <defs>
                           <linearGradient id="scoreGrad" x1="0" y1="0" x2="1" y2="1">
                             <stop offset="0%" stopColor="#8b5cf6" />
-                            <stop offset="100%" stopColor="#06b6d4" />
+                            <stop offset="100%" stopColor="#93a8cc" />
                           </linearGradient>
                         </defs>
                       </svg>

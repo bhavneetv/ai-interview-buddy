@@ -492,7 +492,7 @@ function IntroCard({ introText }) {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 60% 80% at 80% 20%, rgba(6,182,212,.06) 0%, transparent 70%)",
+            "radial-gradient(ellipse 60% 80% at 80% 20%, rgba(147,168,204,.06) 0%, transparent 70%)",
         }}
       />
       <div className="relative">
@@ -505,7 +505,7 @@ function IntroCard({ introText }) {
             <button
               onClick={handleSpeak}
               className="p-2 rounded-xl transition-all hover:bg-white/[0.08]"
-              style={{ color: speaking ? "#06b6d4" : "rgba(255,255,255,.3)" }}
+              style={{ color: speaking ? "#93a8cc" : "rgba(255,255,255,.3)" }}
               title={speaking ? "Stop" : "Read Aloud"}
             >
               {speaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -751,8 +751,8 @@ function ResumeUpload({ uploadState, onFileChange }: any) {
               whileTap={{ scale: 0.98 }}
               className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl text-sm font-bold text-white transition-all relative overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
-                boxShadow: "0 4px 24px rgba(124,58,237,.35)"
+                background: "linear-gradient(135deg, #5b8cff 0%, #4a6fd1 100%)",
+                boxShadow: "0 4px 24px rgba(91,140,255,.35)"
               }}
             >
               <Zap className="w-4 h-4" />
@@ -800,7 +800,7 @@ function ResumeUpload({ uploadState, onFileChange }: any) {
                 transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
                 style={{
                   height: "100%", width: "40%", borderRadius: 999,
-                  background: "linear-gradient(90deg, #7c3aed, #06b6d4)"
+                  background: "linear-gradient(90deg, #5b8cff, #93a8cc)"
                 }}
               />
             </div>
@@ -843,7 +843,7 @@ function AnalysisResults({ analysis, onReset, navigate }) {
       icon: Layers, title: "Project Evaluation",
       score: safeScore(analysis.project_impact || analysis.project_score),
       feedback: analysis.project_feedback || "Assessment of project descriptions, impact metrics, and technical complexity demonstrated.",
-      accentColor: "#06b6d4"
+      accentColor: "#93a8cc"
     },
     {
       icon: Shield, title: "ATS Optimization Check",
@@ -1034,7 +1034,7 @@ function AnalysisResults({ analysis, onReset, navigate }) {
               >
                 <span
                   className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5"
-                  style={{ background: "rgba(6,182,212,.2)", color: "#06b6d4" }}
+                  style={{ background: "rgba(147,168,204,.2)", color: "#93a8cc" }}
                 >
                   Q{i + 1}
                 </span>
@@ -1054,7 +1054,7 @@ function AnalysisResults({ analysis, onReset, navigate }) {
       >
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(124,58,237,.08) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(91,140,255,.08) 0%, transparent 70%)" }}
         />
         <div className="relative text-center">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-600/20 to-cyan-500/20 border border-white/[0.08] flex items-center justify-center mx-auto mb-4">
@@ -1067,12 +1067,12 @@ function AnalysisResults({ analysis, onReset, navigate }) {
           <motion.button
             onClick={handleStartInterview}
             disabled={saveLoading}
-            whileHover={{ scale: 1.02, boxShadow: "0 8px 40px rgba(124,58,237,.5)" }}
+            whileHover={{ scale: 1.02, boxShadow: "0 8px 40px rgba(91,140,255,.5)" }}
             whileTap={{ scale: 0.97 }}
             className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-sm font-bold text-white relative overflow-hidden disabled:opacity-60"
             style={{
-              background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 50%, #0891b2 100%)",
-              boxShadow: "0 4px 24px rgba(124,58,237,.35)"
+              background: "linear-gradient(135deg, #5b8cff 0%, #4a6fd1 50%, #7d93ba 100%)",
+              boxShadow: "0 4px 24px rgba(91,140,255,.35)"
             }}
           >
             {saveLoading ? (
@@ -1125,11 +1125,11 @@ export default function ResumePage() {
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute -top-32 -right-32 w-96 h-96 rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(124,58,237,.1) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, rgba(91,140,255,.1) 0%, transparent 70%)" }}
         />
         <div
           className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(6,182,212,.08) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, rgba(147,168,204,.08) 0%, transparent 70%)" }}
         />
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full"
@@ -1154,7 +1154,7 @@ export default function ResumePage() {
           <div className="flex items-center gap-2.5">
             <div
               className="w-8 h-8 rounded-xl flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, #7c3aed, #06b6d4)" }}
+              style={{ background: "linear-gradient(135deg, #5b8cff, #93a8cc)" }}
             >
               <BrainCircuit className="w-4 h-4 text-white" />
             </div>
@@ -1166,7 +1166,7 @@ export default function ResumePage() {
         <div className="flex items-center gap-2">
           <div
             className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold text-white"
-            style={{ background: "linear-gradient(135deg, #7c3aed, #06b6d4)" }}
+            style={{ background: "linear-gradient(135deg, #5b8cff, #93a8cc)" }}
           >
             {user?.user_metadata?.full_name?.[0] || user?.email?.[0]?.toUpperCase() || "U"}
           </div>

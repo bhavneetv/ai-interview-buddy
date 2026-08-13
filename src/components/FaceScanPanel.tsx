@@ -3,11 +3,11 @@ import { Camera, CameraOff, ScanFace, ShieldCheck, Activity } from 'lucide-react
 import { useFaceMonitor } from '@/hooks/useFaceMonitor';
 
 const tokens = {
-  violet: '#7c3aed',
-  cyan: '#06b6d4',
-  emerald: '#10b981',
-  amber: '#f59e0b',
-  red: '#ef4444',
+  violet: '#5b8cff',
+  cyan: '#93a8cc',
+  emerald: '#4fa87d',
+  amber: '#c9a227',
+  red: '#d96a6a',
 };
 
 interface Props {

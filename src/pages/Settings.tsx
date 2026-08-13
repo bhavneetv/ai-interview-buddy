@@ -4,7 +4,7 @@ import { ArrowLeft, SettingsIcon, Camera, Mic, Volume2, ScanFace, RotateCcw, Clo
 import { useSettings, AppSettings } from '@/lib/settings';
 import FaceScanPanel from '@/components/FaceScanPanel';
 
-const tokens = { bg: '#050510', violet: '#7c3aed', cyan: '#06b6d4' };
+const tokens = { bg: '#0a0a0c', violet: '#5b8cff', cyan: '#93a8cc' };
 
 function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -30,7 +30,7 @@ function Row({
   return (
     <div className="flex items-start gap-3 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
       <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-        style={{ background: 'rgba(124,58,237,0.15)' }}>
+        style={{ background: 'rgba(91,140,255,0.15)' }}>
         <Icon className="w-4 h-4" style={{ color: tokens.violet }} />
       </div>
       <div className="flex-1 min-w-0">
