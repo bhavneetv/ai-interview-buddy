@@ -536,25 +536,27 @@ export default function Interview() {
           body: { type: 'generate_questions', skills: resumeText.substring(0, 2000), name: user.user_metadata?.full_name || 'Candidate' },
         });
 
-        if (error || data.error) throw new Error(data?.error || error?.message);
-        setQuestions(data.questions || []);
+        if (error || data?.error) throw new Error(data?.error || error?.message || 'Could not generate questions');
+        const list: Question[] = Array.isArray(data?.questions) ? data.questions.filter((q: any) => q?.text) : [];
+        if (!list.length) throw new Error('No interview questions were generated. Please try again.');
+
+        setQuestions(list);
         setPhase('intro');
 
-        const name = user.user_metadata?.full_name || 'there';
-        speakWithState(`Hello ${name}, based on your resume, let's begin your interview. I'll ask you ${data.questions?.length || 5} questions. You'll have 60 seconds to answer each. Let's start!`, () => {
+        const askFirst = () => {
           setPhase('question');
           setTimerActive(false);
+          window.setTimeout(() => {
+            speakWithState(list[0].text, () => {
+              startListening();
+              setTimerActive(true);
+            });
+          }, 250);
+        };
 
-          const firstQuestion = data.questions?.[0]?.text;
-          if (firstQuestion) {
-            window.setTimeout(() => {
-              speakWithState(firstQuestion, () => {
-                startListening();
-                setTimerActive(true);
-              });
-            }, 250);
-          }
-        });
+        const name = user.user_metadata?.full_name || 'there';
+        speakWithState(`Hello ${name}, based on your resume, let's begin your interview. I'll ask you ${list.length} questions. You'll have 60 seconds to answer each. Let's start!`, askFirst);
+
       } catch (err: any) {
         toast({ title: 'Error', description: err.message, variant: 'destructive' });
         navigate('/dashboard');
