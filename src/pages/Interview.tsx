@@ -542,20 +542,7 @@ export default function Interview() {
 
         setQuestions(list);
         setPhase('intro');
-
-        const askFirst = () => {
-          setPhase('question');
-          setTimerActive(false);
-          window.setTimeout(() => {
-            speakWithState(list[0].text, () => {
-              startListening();
-              setTimerActive(true);
-            });
-          }, 250);
-        };
-
-        const name = user.user_metadata?.full_name || 'there';
-        speakWithState(`Hello ${name}, based on your resume, let's begin your interview. I'll ask you ${list.length} questions. You'll have 60 seconds to answer each. Let's start!`, askFirst);
+        // Wait for a tap on "Start Interview" — browsers block audio without one.
 
       } catch (err: any) {
         toast({ title: 'Error', description: err.message, variant: 'destructive' });
