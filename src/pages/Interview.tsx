@@ -517,6 +517,38 @@ export default function Interview() {
     speak(text, finish);
   }, [speak]);
 
+  const [introStarted, setIntroStarted] = useState(false);
+  const beginInterview = useCallback(() => {
+    if (introStarted || !questions.length) return;
+    setIntroStarted(true);
+    // Prime audio inside the tap so mobile browsers allow later playback.
+    try {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const warm = new SpeechSynthesisUtterance(' ');
+        warm.volume = 0;
+        window.speechSynthesis.speak(warm);
+        window.speechSynthesis.resume();
+      }
+      const AC = window.AudioContext || (window as any).webkitAudioContext;
+      if (AC) { const ctx = new AC(); void ctx.resume().then(() => ctx.close()).catch(() => undefined); }
+    } catch { /* ignore */ }
+
+    const list = questions;
+    const askFirst = () => {
+      setPhase('question');
+      setTimerActive(false);
+      window.setTimeout(() => {
+        speakWithState(list[0].text, () => {
+          startListening();
+          setTimerActive(true);
+        });
+      }, 250);
+    };
+    const name = user?.user_metadata?.full_name || 'there';
+    speakWithState(`Hello ${name}, based on your resume, let's begin your interview. I'll ask you ${list.length} questions. Let's start!`, askFirst);
+  }, [introStarted, questions, speakWithState, startListening, user]);
+
 
   useEffect(() => {
     if (!user || !analysisId || !resumeText) return;
@@ -907,7 +939,17 @@ export default function Interview() {
                 <AIAvatar isSpeaking={isAiSpeaking} phase={phase} />
                 <div className="space-y-2">
                   <h2 className="text-xl font-bold text-white">AI Interview Coach</h2>
-                  <p className="text-white/40 text-sm">Preparing your personalized interview session...</p>
+                  <p className="text-white/40 text-sm">
+                    {introStarted ? 'Starting your interview...' : `${questions.length} questions ready. Turn up your volume and tap start.`}
+                  </p>
+                  {!introStarted && (
+                    <button
+                      onClick={beginInterview}
+                      className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                    >
+                      <Volume2 className="w-4 h-4" /> Start Interview
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>
